@@ -1,0 +1,21 @@
+body{
+    margin: 10px 0;
+    padding: 0;
+}
+.card {
+        margin: 0 auto; 
+        float: none; 
+        margin-bottom: 10px; 
+}
+img{
+    width: 50%;
+}
+.btn{
+    float: right;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+.row{
+    margin-top: 10px;
+}
