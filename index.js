@@ -84,7 +84,7 @@ function generateData(start, end) {
     request.onload = function () {
         // Begin accessing JSON data here
         var data = JSON.parse(this.response);
-        var dataToWrite = "";
+        document.querySelector(".container").innerHTML = "";
         for (let index = 0; index < data.length; index++) {
             if (index % 3 == 0) {
                 console.log(index);
@@ -103,7 +103,7 @@ function generateCard(value) {
     console.log(value);
     var allRow = document.querySelectorAll(".row");
     var targetRow = allRow[allRow.length - 1];
-    var max = value.title.length;
+
     if (value.url.includes("youtube")) {
         var media = '<iframe class="card-img-top" src="' + value.url + '" alt="video"></iframe>';
     } else {
