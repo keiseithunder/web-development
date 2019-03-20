@@ -34,6 +34,9 @@ function getData() {
         }
 
     } else if (!checkNull(item.value)) {
+        if(item.value<1){
+            return;
+        }
         if (checkNull(end.value) && !checkNull(start.value)) {
             var temp = new Date(start.value);
             end = new Date(temp.getTime() + ((item.value - 1) * 24 * 60 * 60 * 1000));
@@ -93,6 +96,10 @@ function generateData(start, end) {
         // Begin accessing JSON data here
         var data = JSON.parse(this.response);
         document.querySelector(".container").innerHTML = "";
+        if(!Array.isArray(data)){
+            generateRow();
+            generateCard(data);
+        }
         for (let index = 0; index < data.length; index++) {
             if (index % 3 == 0) {
                 console.log(index);
