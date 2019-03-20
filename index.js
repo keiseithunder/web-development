@@ -24,6 +24,10 @@ function getData() {
         } else {
             end = new Date(end.value);
             start = new Date(start.value);
+            if(end - start <0){
+                alert("Start date cannot after End date");
+                return;
+            }
             item = Math.floor((end - start) / 86400000) + 1;
             end = end.getFullYear() + "-" + ((end.getMonth() + 1) < 10 ? ("0" + (end.getMonth() + 1)) : end.getMonth() + 1) + "-" + end.getDate();
             start = start.getFullYear() + "-" + ((start.getMonth() + 1) < 10 ? ("0" + (start.getMonth() + 1)) : start.getMonth() + 1) + "-" + start.getDate();
@@ -51,6 +55,10 @@ function getData() {
         } else {
             end = new Date(end.value);
             start = new Date(start.value);
+            if(end - start <0){
+                alert("Start date cannot after End date");
+                return;
+            }
             var dayRange = Math.floor((end - start) / 86400000) + 1;
             if (dayRange != item.value) {
                 alert("Your item and End_Date - start_date + 1  are not match");
