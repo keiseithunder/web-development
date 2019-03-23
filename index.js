@@ -1,9 +1,16 @@
+var allInput = document.querySelectorAll("input");
+for (let index = 0; index < allInput.length; index++) {
+    allInput[index].addEventListener("change", getData);
+}
+document.querySelector("select[name='arrange']").addEventListener("change", getData);
+
+const maxIten = 100;
 function getData() {
     var start = document.querySelector("input[name='start-date']");
     var end = document.querySelector("input[name='end-date']");
     var item = document.querySelector("input[name='numberOfItem']");
-    console.log(item.value);
-    console.log(checkNull(item.value));
+    var arrange = document.querySelector("select[name='arrange']").value;
+    document.querySelector(".loader").classList.toggle("display-none");
     if (checkNull(item.value)) {
         item = 4;
         if (checkNull(end.value) && !checkNull(start.value)) {
@@ -24,18 +31,30 @@ function getData() {
         } else {
             end = new Date(end.value);
             start = new Date(start.value);
-            if(end - start <0){
+            if (end - start < 0) {
                 alert("Start date cannot after End date");
                 return;
             }
-            item = Math.floor((end - start) / 86400000) + 1;
+            var dayRange = Math.floor((end - start) / 86400000) + 1;
+            if(dayRange>100){
+                item.value = 100;
+                if(arrange === 'From Start'){
+                    end = new Date(start.getTime() + ((item.value - 1) * 24 * 60 * 60 * 1000));
+                }else if(arrange === 'From End'){
+                    start = new Date(end.getTime() - ((item.value - 1) * 24 * 60 * 60 * 1000));
+                }
+            }
             end = end.getFullYear() + "-" + ((end.getMonth() + 1) < 10 ? ("0" + (end.getMonth() + 1)) : end.getMonth() + 1) + "-" + end.getDate();
             start = start.getFullYear() + "-" + ((start.getMonth() + 1) < 10 ? ("0" + (start.getMonth() + 1)) : start.getMonth() + 1) + "-" + start.getDate();
+            item = item.value;
         }
 
     } else if (!checkNull(item.value)) {
-        if(item.value<1){
+        if (item.value < 1) {
             return;
+        }
+        if(item.value >=100){
+            item.value = 100;
         }
         if (checkNull(end.value) && !checkNull(start.value)) {
             var temp = new Date(start.value);
@@ -58,25 +77,33 @@ function getData() {
         } else {
             end = new Date(end.value);
             start = new Date(start.value);
-            if(end - start <0){
+            if (end - start < 0) {
                 alert("Start date cannot after End date");
                 return;
             }
             var dayRange = Math.floor((end - start) / 86400000) + 1;
-            if (dayRange != item.value) {
-                alert("Your item and End_Date - start_date + 1  are not match");
-                return;
+            if(dayRange>100){
+                item.value = 100;
+                if(arrange === 'From Start'){
+                    end = new Date(start.getTime() + ((item.value - 1) * 24 * 60 * 60 * 1000));
+                }else if(arrange === 'From End'){
+                    start = new Date(end.getTime() - ((item.value - 1) * 24 * 60 * 60 * 1000));
+                }
             }
+            end = end.getFullYear() + "-" + ((end.getMonth() + 1) < 10 ? ("0" + (end.getMonth() + 1)) : end.getMonth() + 1) + "-" + end.getDate();
+            start = start.getFullYear() + "-" + ((start.getMonth() + 1) < 10 ? ("0" + (start.getMonth() + 1)) : start.getMonth() + 1) + "-" + start.getDate();
+            item = item.value;
         }
 
     }
-    console.log(start+"--"+end);
-    generateData(start, end);
+    console.log(start + "--" + end);
+    
+    generateData(start, end, arrange);
 
 }
 
 
-function generateData(start, end) {
+function generateData(start, end, whatFirst) {
     // var days = 4;
     // var date = new Date();
     // var last = new Date(date.getTime() - (days * 24 * 60 * 60 * 1000));
@@ -85,6 +112,7 @@ function generateData(start, end) {
     // var year = last.getFullYear();
     // var start_date = year + "-" + month + "-" + day;
     // var end_date = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? ("0" + (date.getMonth() + 1)) : date.getMonth() + 1) + "-" + date.getDate();
+    
     var request = new XMLHttpRequest()
     // Open a new connection, using the GET request on the URL endpoint
     if (start !== end) {
@@ -96,26 +124,39 @@ function generateData(start, end) {
         // Begin accessing JSON data here
         var data = JSON.parse(this.response);
         document.querySelector(".container").innerHTML = "";
-        if(!Array.isArray(data)){
+        if (!Array.isArray(data)) {
             generateRow();
             generateCard(data);
         }
-        for (let index = 0; index < data.length; index++) {
-            if (index % 3 == 0) {
-                console.log(index);
-                generateRow();
+        if (whatFirst === 'From Start') {
+            for (let index = 0; index < data.length; index++) {
+                if (index % 3 == 0) {
+
+                    generateRow();
+                }
+                generateCard(data[index]);
             }
-            generateCard(data[index]);
+            document.querySelector(".loader").classList.toggle("display-none");
+        }else if(whatFirst === 'From End'){
+            for (let index = 0; index < data.length; index++) {
+                if (index % 3 == 0) {
+                    generateRow();
+                }
+                generateCard(data[data.length-index-1]);
+            }
+            document.querySelector(".loader").classList.toggle("display-none");
         }
+        
         console.log(data);
     }
+    
     // Send request
     request.send()
 }
 
 
 function generateCard(value) {
-    console.log(value);
+    //console.log(value);
     var allRow = document.querySelectorAll(".row");
     var targetRow = allRow[allRow.length - 1];
 
@@ -131,7 +172,7 @@ function generateRow() {
     document.querySelector(".container").innerHTML = document.querySelector(".container").innerHTML + '<div class="row"></div>';
 }
 function checkNull(value) {
-    if (typeof value === 'undefined' || value === null || value ==='') {
+    if (typeof value === 'undefined' || value === null || value === '') {
         return true;
     }
     return false;
