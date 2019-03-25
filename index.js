@@ -5,6 +5,7 @@ for (let index = 0; index < allInput.length; index++) {
 document.querySelector("select[name='arrange']").addEventListener("change", getData);
 
 const maxItem = 100;
+const defualtItem =5;
 function getData() {
     var start = document.querySelector("input[name='start-date']");
     var end = document.querySelector("input[name='end-date']");
@@ -12,7 +13,7 @@ function getData() {
     var arrange = document.querySelector("select[name='arrange']").value;
     document.querySelector(".loader").classList.toggle("display-none");
     if (checkNull(item.value)) {
-        item = 4;
+        item = defualtItem;
         if (checkNull(end.value) && !checkNull(start.value)) {
             var temp = new Date(start.value);
             if(!checkValidInput(temp)){
@@ -67,7 +68,7 @@ function getData() {
             // }
             end = end.getFullYear() + "-" + ((end.getMonth() + 1) < 10 ? ("0" + (end.getMonth() + 1)) : end.getMonth() + 1) + "-" + ((end.getDate()) < 10 ? ("0" + (end.getDate())) : end.getDate());
             start = start.getFullYear() + "-" + ((start.getMonth() + 1) < 10 ? ("0" + (start.getMonth() + 1)) : start.getMonth() + 1) + "-" + ((start.getDate()) < 10 ? ("0" + (start.getDate())) : start.getDate());
-            item = item.value;
+            item = maxItem;
         }
 
     } else if (!checkNull(item.value)) {
