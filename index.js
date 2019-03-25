@@ -5,19 +5,14 @@ for (let index = 0; index < allInput.length; index++) {
 document.querySelector("select[name='arrange']").addEventListener("change", getData);
 
 const maxItem = 100;
-const defualtItem = 5;
+const defualtItem = 4;
 function getData() {
     var start = document.querySelector("input[name='start-date']");
     var end = document.querySelector("input[name='end-date']");
     var item = document.querySelector("input[name='numberOfItem']");
     var arrange = document.querySelector("select[name='arrange']").value;
-    
+
     document.querySelector(".loader").classList.toggle("display-none");
-    if (start.value.length != 11 || end.value.length != 11) {
-        alert("Your in put is not in a correct format");
-        document.querySelector(".loader").classList.toggle("display-none");
-        return;
-    }
     if (checkNull(item.value)) {
         item = defualtItem;
         if (checkNull(end.value) && !checkNull(start.value)) {
@@ -144,11 +139,15 @@ function getData() {
 
     }
     //console.log(start + "--" + end);
+    console.log(checkValidDate(start) + " " + checkValidDate(end))
+    console.log(start + "--" + end)
     if (!checkValidDate(start) || !checkValidDate(end)) {
+        alert("YOUR DATE IS NOT VALID 'date < 1995-06-20 OR future date'");
         document.querySelector(".loader").classList.toggle("display-none");
         return;
-    }
+    } 
     generateData(start, end, arrange, item);
+
 
 }
 
@@ -179,7 +178,7 @@ function generateData(start, end, whatFirst, item) {
             generateCard(data);
         }
         if (whatFirst === 'From Start') {
-            for (let index = 0; index < data.length && index < maxItem && index < item; index++) {
+            for (let index = 0; index < data.length && index < maxItem && index <= item; index++) {
                 if (index % 3 == 0) {
 
                     generateRow();
@@ -228,10 +227,20 @@ function checkNull(value) {
     return false;
 }
 function checkValidDate(date) {
-    var tempp = new Date();
-    if (Math.floor((tempp - date) / 86400000) < 0) {
+    var thisDate = new Date(date);
+    var currDate = new Date();
+    var pastDate = new Date("1995-06-20");
+    // console.log(currDate);
+    // console.log(pastDate);
+    if (thisDate - pastDate < 0) {
+        // console.log(date+"--"+(date - pastDate));
+        return false;
+    } if (currDate - thisDate < 0) {
+        // console.log(date+"--"+(currDate - date));
         return false;
     }
+    // console.log(date+"--"+(date - pastDate));
+    // console.log(date+"--"+(currDate - date));
     return true;
 }
 function checkValidInput(date) {
