@@ -5,18 +5,24 @@ for (let index = 0; index < allInput.length; index++) {
 document.querySelector("select[name='arrange']").addEventListener("change", getData);
 
 const maxItem = 100;
-const defualtItem =5;
+const defualtItem = 5;
 function getData() {
     var start = document.querySelector("input[name='start-date']");
     var end = document.querySelector("input[name='end-date']");
     var item = document.querySelector("input[name='numberOfItem']");
     var arrange = document.querySelector("select[name='arrange']").value;
+    
     document.querySelector(".loader").classList.toggle("display-none");
+    if (start.value.length != 11 || end.value.length != 11) {
+        alert("Your in put is not in a correct format");
+        document.querySelector(".loader").classList.toggle("display-none");
+        return;
+    }
     if (checkNull(item.value)) {
         item = defualtItem;
         if (checkNull(end.value) && !checkNull(start.value)) {
             var temp = new Date(start.value);
-            if(!checkValidInput(temp)){
+            if (!checkValidInput(temp)) {
                 alert("Your in put is not in a correct format");
                 document.querySelector(".loader").classList.toggle("display-none");
                 return;
@@ -26,7 +32,7 @@ function getData() {
             start = start.value;
         } else if (!checkNull(end.value) && checkNull(start.value)) {
             var temp = new Date(end.value);
-            if(!checkValidInput(temp)){
+            if (!checkValidInput(temp)) {
                 alert("Your in put is not in a correct format");
                 document.querySelector(".loader").classList.toggle("display-none");
                 return;
@@ -42,7 +48,7 @@ function getData() {
         } else {
             end = new Date(end.value);
             start = new Date(start.value);
-            if(!checkValidInput(start)||!checkValidInput(end)){
+            if (!checkValidInput(start) || !checkValidInput(end)) {
                 alert("Your in put is not in a correct format");
                 document.querySelector(".loader").classList.toggle("display-none");
                 return;
@@ -78,12 +84,12 @@ function getData() {
             return;
         }
         if (item.value > maxItem) {
-            alert("Maximum item is "+maxItem);
+            alert("Maximum item is " + maxItem);
             item.value = maxItem;
         }
         if (checkNull(end.value) && !checkNull(start.value)) {
             var temp = new Date(start.value);
-            if(!checkValidInput(temp)){
+            if (!checkValidInput(temp)) {
                 alert("Your in put is not in a correct format");
                 document.querySelector(".loader").classList.toggle("display-none");
                 return;
@@ -94,7 +100,7 @@ function getData() {
             item = item.value;
         } else if (!checkNull(end.value) && checkNull(start.value)) {
             var temp = new Date(end.value);
-            if(!checkValidInput(temp)){
+            if (!checkValidInput(temp)) {
                 alert("Your in put is not in a correct format");
                 document.querySelector(".loader").classList.toggle("display-none");
                 return;
@@ -112,7 +118,7 @@ function getData() {
         } else {
             end = new Date(end.value);
             start = new Date(start.value);
-            if(!checkValidInput(start)||!checkValidInput(end)){
+            if (!checkValidInput(start) || !checkValidInput(end)) {
                 alert("Your in put is not in a correct format");
                 document.querySelector(".loader").classList.toggle("display-none");
                 return;
@@ -123,7 +129,7 @@ function getData() {
                 return;
             }
             var dayRange = Math.floor((end - start) / 86400000) + 1;
-            if (dayRange > maxItem&&item.value>maxItem) {
+            if (dayRange > maxItem && item.value > maxItem) {
                 item.value = maxItem;
                 if (arrange === 'From Start') {
                     end = new Date(start.getTime() + ((item.value - 1) * 24 * 60 * 60 * 1000));
@@ -142,12 +148,12 @@ function getData() {
         document.querySelector(".loader").classList.toggle("display-none");
         return;
     }
-    generateData(start, end, arrange,item);
+    generateData(start, end, arrange, item);
 
 }
 
 
-function generateData(start, end, whatFirst,item) {
+function generateData(start, end, whatFirst, item) {
     // var days = 4;
     // var date = new Date();
     // var last = new Date(date.getTime() - (days * 24 * 60 * 60 * 1000));
@@ -173,7 +179,7 @@ function generateData(start, end, whatFirst,item) {
             generateCard(data);
         }
         if (whatFirst === 'From Start') {
-            for (let index = 0; index < data.length&&index<maxItem&&index<item; index++) {
+            for (let index = 0; index < data.length && index < maxItem && index < item; index++) {
                 if (index % 3 == 0) {
 
                     generateRow();
@@ -182,7 +188,7 @@ function generateData(start, end, whatFirst,item) {
             }
             document.querySelector(".loader").classList.toggle("display-none");
         } else if (whatFirst === 'From End') {
-            for (let index = 0; index < data.length&&index<maxItem&&index<item; index++) {
+            for (let index = 0; index < data.length && index < maxItem && index < item; index++) {
                 if (index % 3 == 0) {
                     generateRow();
                 }
@@ -228,8 +234,8 @@ function checkValidDate(date) {
     }
     return true;
 }
-function checkValidInput(date){
-    if(date == 'Invalid Date'){
+function checkValidInput(date) {
+    if (date == 'Invalid Date') {
         return false;
     }
     return true;
